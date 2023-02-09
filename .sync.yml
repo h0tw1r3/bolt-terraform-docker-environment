@@ -1,0 +1,30 @@
+---
+appveyor.yml:
+  delete: true
+.travis.yml:
+  delete: true
+.gitattributes:
+  include:
+    keys/private_key.pkcs7.pem: filter=git-crypt diff=git-crypt export-ignore
+    .git-crypt: export-ignore
+Rakefile:
+  default_disabled_lint_checks:
+    - '140chars'
+.rubocop.yml:
+  default_configs:
+    inherit_from: ".rubocop_todo.yml"
+.gitignore:
+  paths:
+    - .modules/
+    - .resource_types/
+    - bolt-debug.log
+    - .plan_cache.json
+    - .plugin_cache.json
+    - .task_cache.json
+    - .rerun.json
+    - .terraform/
+    - .terraform*lock.hcl
+    - terraform.tfstate*
+    - Puppetfile
+    - /keys/ssh.*
+    - /control-repo

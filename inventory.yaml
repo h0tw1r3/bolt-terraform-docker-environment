@@ -1,0 +1,37 @@
+---
+groups:
+  - name: docker
+    facts:
+      node_type: 'generic'
+      ec2_metadata:
+        instance-type: 't2.small'
+        placement:
+          availability-zone: 'us-east-1b'
+          region: 'us-east-1'
+        security-groups: "testing"
+    config:
+      ssh:
+        user: root
+    targets:
+      - _plugin: terraform
+        resource_type: docker_container.*
+        target_mapping:
+          uri: network_data.0.ip_address
+          name: name
+        dir: terraform/docker
+
+config:
+  ssh:
+    host-key-check: false
+    private-key: "./keys/ssh.pem"
+  winrm:
+    user: Administrator
+    ssl-verify: false
+
+vars:
+  terraform:
+    domain: q.local
+  nodes:
+    puppet-server:
+      facts:
+        node_type: 'puppet_master'

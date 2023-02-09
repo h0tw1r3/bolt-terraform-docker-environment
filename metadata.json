@@ -1,0 +1,28 @@
+{
+  "name": "h0tw1r3-btde",
+  "version": "0.1.0",
+  "author": "Jeffrey Clark",
+  "summary": "bolt terraform docker example",
+  "license": "proprietary",
+  "source": "",
+  "dependencies": [
+
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Amazon Linux",
+      "operatingsystemrelease": [
+        "2"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 6.21.0 < 8.0.0"
+    }
+  ],
+  "pdk-version": "2.6.1",
+  "template-url": "pdk-default#2.7.1",
+  "template-ref": "tags/2.7.1-0-g9a16c87"
+}

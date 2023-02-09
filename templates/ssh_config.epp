@@ -1,0 +1,5 @@
+<% $hosts.each |$host, $config| { -%>
+Host <%= $host %>
+<% $config.each |$key, $value| { -%>
+  <%= $key %> <%= $value %>
+<% } } -%>
