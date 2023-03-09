@@ -1,19 +1,37 @@
 # @summary bootstrap any node type
 #
+# @params password
+#   generated user password
+# @param groups
+#   ensure generated user is member of groups
+#
 # @api private
-class btde::bootstrap::base {
+class btde::bootstrap::base (
+  Sensitive $password,
+  Optional[Array] $groups,
+) {
   assert_private()
 
-  $normalize_user_name = regsubst($facts['btde']['user']['name'], /((.+[\\+])|[\W\s])/, '', 'G')
-  $normalize_group_name = regsubst($facts['btde']['group']['name'], /((.+[\\+])|[\W\s])/, '', 'G')
+  $user = $facts['btde']['user']
+  $group = $facts['btde']['group']
+  $ssh_key = file("${module_name}/../keys/ssh.pub").split(/\s/)
 
-  group { $normalize_group_name:
-    gid => $facts['btde']['group']['gid'],
+  group { $group['name']:
+    gid => $group['gid'],
   }
-  -> user { $normalize_user_name:
+  -> user { $user['name']:
     ensure     => present,
-    uid        => $facts['btde']['user']['uid'],
-    gid        => $facts['btde']['user']['gid'],
+    password   => Sensitive(sprintf('%s', btde::hash_passwd($password))),
+    uid        => $user['uid'],
+    gid        => $user['gid'],
     managehome => true,
+    groups     => $groups,
+    shell      => '/bin/bash',
+  }
+  -> ssh_authorized_key { "${user['name']}@${module_name}":
+    ensure => present,
+    user   => $user['name'],
+    key    => $ssh_key[1],
+    type   => $ssh_key[0],
   }
 }

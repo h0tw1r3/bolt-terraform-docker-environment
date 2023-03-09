@@ -1,4 +1,8 @@
 ---
+lookup_options:
+  ^btde::.*password:
+    convert_to: Sensitive
+
 # make these facts available on the node when not using bolt
 # see: /etc/facter/facts.d
 btde::bootstrap::custom_facts:
@@ -9,6 +13,11 @@ btde::bootstrap::packages:
   - gnupg
   - curl
   - git
+  - sudo
+
+btde::bootstrap::base::password: 'root'
+btde::bootstrap::base::groups:
+  - sudo
 
 btde::bootstrap::node_type_map:
   puppet_master: primary

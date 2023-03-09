@@ -14,16 +14,15 @@ plan btde::bootstrap (
   Boolean    $noop = false,
   Boolean    $ssh_config = true,
 ) {
-  if $ssh_config {
-    run_plan('btde::local::ssh_config')
-  }
-
   ctrl::do_until('interval' => 10, 'limit' => 12) || {
     $targets.apply_prep
   }
 
   $current_user = btde::getuser(system::env('USER'))
   $current_user_group = btde::getgroup($current_user['gid'])
+
+  $normalize_user_name = regsubst($current_user['name'], /((.+[\\+])|[\W\s])/, '', 'G')
+  $normalize_group_name = regsubst($current_user_group['name'], /((.+[\\+])|[\W\s])/, '', 'G')
 
   # prepare custom facts
   get_targets($targets).each() |$target| {
@@ -34,10 +33,15 @@ plan btde::bootstrap (
     }
     add_facts($target, {
         'btde' => {
-          'user'  => $current_user,
-          'group' => $current_user_group,
+          'user'  => deep_merge($current_user, { 'name' => $normalize_user_name }),
+          'group' => deep_merge($current_user_group, { 'name' => $normalize_group_name }),
         },
     })
+    $target.set_var('local_ssh_config_username', $normalize_user_name)
+  }
+
+  if $ssh_config {
+    run_plan('btde::local::ssh_config', 'noop' => $noop)
   }
 
   $results = apply($targets, _noop => $noop, _catch_errors => true) {

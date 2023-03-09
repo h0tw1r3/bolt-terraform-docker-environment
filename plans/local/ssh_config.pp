@@ -1,6 +1,11 @@
 # @summary manage local ssh_config for docker instances in ~/.ssh/btde_config
 #
-plan btde::local::ssh_config {
+# @param [Boolean] noop
+#   no changes, only report what would change
+#
+plan btde::local::ssh_config (
+  Boolean $noop = false,
+) {
   $targets = get_targets('docker')
 
   $ssh_hosts = $targets.reduce({}) |$memo, $target| {
@@ -14,9 +19,14 @@ plan btde::local::ssh_config {
 
     $domain = $target.vars()['terraform']['domain']
 
+    $username = ('local_ssh_config_username' in $target.vars()) ? {
+      true    => $target.vars()['local_ssh_config_username'],
+      default => 'root',
+    }
+
     $memo + {
-      "${target.safe_name} ${target.target_alias.join(' ')} ${target.safe_name}.${domain} ${target.uri}" => {
-        'User'         => $target.config()['ssh']['user'],
+      "${target.safe_name} ${target.target_alias.join(' ')} ${target.safe_name}.${domain}" => {
+        'User'         => $username,
         'HostName'     => $target.uri,
         'IdentityFile' => btde::abspath($target.config()['ssh']['private-key']),
       } + $check_config,
@@ -26,7 +36,7 @@ plan btde::local::ssh_config {
   $target = get_target('localhost')
   $current_home = system::env('HOME')
 
-  return apply($target) {
+  return apply($target, _noop => $noop, _catch_errors => true) {
     augeas { 'include_btde':
       lens    => 'Ssh.lns',
       incl    => "${current_home}/.ssh/config",
