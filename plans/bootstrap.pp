@@ -40,7 +40,7 @@ plan btde::bootstrap (
     })
   }
 
-  $results = apply($targets) {
+  $results = apply($targets, _noop => $noop, _catch_errors => true) {
     include btde::bootstrap
   }
 
@@ -54,4 +54,6 @@ plan btde::bootstrap (
       log::error($result.error)
     }
   }
+
+  return($results)
 }
