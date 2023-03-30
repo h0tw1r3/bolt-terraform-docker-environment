@@ -38,3 +38,4 @@ bolt-debug.log
 terraform.tfstate*
 Puppetfile
 /keys/ssh.*
+/control-repo

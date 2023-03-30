@@ -2,7 +2,7 @@
 groups:
   - name: docker
     facts:
-      node_type: 'generic'
+      role: 'base'
       ec2_metadata:
         instance-type: 't2.small'
         placement:
@@ -32,6 +32,5 @@ vars:
   terraform:
     domain: q.local
   nodes:
-    puppet-server:
-      facts:
-        node_type: 'puppet_master'
+    _plugin: yaml
+    filepath: containers.yaml

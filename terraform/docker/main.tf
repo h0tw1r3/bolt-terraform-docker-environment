@@ -4,15 +4,16 @@ resource "docker_container" "map" {
     key => value
   }
 
+  cgroupns_mode = try(each.value.cgroupns, try(local.os[each.value.image].cgroupns, var.cgroupns))
   name = each.key
-  image = try(lookup(local.images, each.value.image).name, docker_image.ubuntu_2004.name)
+  image = docker_image.map[each.value.image].name
   hostname = each.key
-  domainname = "${var.domain}"
+  # domainname = "${var.domain}"
 
-  privileged = true
+  privileged = try(each.value.privileged, try(local.os[each.value.image].privileged, var.privileged))
   must_run = true
-  start = true
-  memory = 2048
+  start = try(each.value.start, var.start)
+  memory = try(each.value.memory, var.memory)
   tty = true
   stdin_open = true
 
@@ -57,14 +58,6 @@ resource "docker_container" "map" {
     }
   }
 
-  dynamic "volumes" {
-    for_each = try(each.value.volumes, {})
-    content {
-      container_path = volumes.key
-      host_path = abspath((substr(volumes.value.path, 0, 1) != "/") ? "../../${volumes.value.path}" : volumes.value.path)
-    }
-  }
-
   volumes {
     container_path = "/sys/fs/cgroup"
     host_path = "/sys/fs/cgroup"
@@ -77,12 +70,23 @@ resource "docker_container" "map" {
     host_path = "/run/docker.sock"
   }
 
+  dynamic "volumes" {
+    for_each = merge(try(each.value.volumes, {}), local.cgroup_volume)
+    content {
+      container_path = volumes.key
+      host_path = abspath((substr(volumes.value.path, 0, 1) != "/") ? "../../${volumes.value.path}" : volumes.value.path)
+      read_only = try(volumes.value.read_only, true)
+    }
+  }
+
   networks_advanced {
-    name = docker_network.test.name
+    name = docker_network.btde.name
     aliases = try(each.value.host_aliases, [])
   }
 
   lifecycle {
     ignore_changes = [ ulimit, memory_swap ]
   }
+
+  depends_on = [docker_image.map]
 }

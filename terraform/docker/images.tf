@@ -1,38 +1,18 @@
-resource "docker_image" "ubuntu_2004" {
-  name = "at.local/ubuntu:20.04"
-  build {
-    context = "."
-    build_args = {
-      IMAGE_REPO : "library/ubuntu"
-      IMAGE_TAG : "20.04"
-    }
-    target = "ubuntu-20.04"
+resource "docker_image" "map" {
+  for_each = {
+    for key, value in local.docker_containers:
+    value.image => lookup(local.images, value.image)
   }
-  keep_locally = true
-}
 
-resource "docker_image" "ubuntu_1804" {
-  name = "at.local/ubuntu:18.04"
+  name = each.value.name
   build {
     context = "."
+    dockerfile = try(each.value.dockerfile, "Dockerfile")
     build_args = {
-      IMAGE_REPO : "library/ubuntu"
-      IMAGE_TAG : "18.04"
+      IMAGE_REPO : each.value.repo
+      IMAGE_TAG : each.value.tag
     }
-    target = "ubuntu-18.04"
-  }
-  keep_locally = true
-}
-
-resource "docker_image" "ubuntu_1604" {
-  name = "at.local/ubuntu:16.04"
-  build {
-    context = "."
-    build_args = {
-      IMAGE_REPO : "library/ubuntu"
-      IMAGE_TAG : "16.04"
-    }
-    target = "ubuntu-16.04"
+    target = each.key
   }
   keep_locally = true
 }

@@ -1,0 +1,19 @@
+---
+puppet-server:
+  image: ubuntu-20.04
+#  volumes:
+#    /etc/puppetlabs/code/environments/production:
+#      path:  "../control-repo"
+  uploads:
+    /root/README.md:
+      source: 'README.md'
+  facts:
+    role: puppet_master
+puppet-agent1:
+  image: ubuntu-18.04
+  facts:
+    role: base
+puppet-agent2:
+  image: ubuntu-14.04
+  facts:
+    role: base

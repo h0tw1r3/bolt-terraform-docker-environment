@@ -4,13 +4,13 @@
 #   Create custom facts on the node for these fact names
 # @param packages
 #   See hiera data/common.yaml
-# @param node_type_map
+# @param role_map
 #   See hiera data/common.yaml
 #
 class btde::bootstrap (
   Array $custom_facts = [],
   Array $packages = [],
-  Hash  $node_type_map = {},
+  Hash  $role_map = {},
 ) {
   $_custom_facts = $custom_facts.reduce({}) |$memo, $fact| {
     $memo + { $fact => $facts[$fact] }
@@ -33,13 +33,13 @@ class btde::bootstrap (
     enable => false,
   }
 
-  $node_bootstrap_class = ($facts['node_type'] in $node_type_map) ? {
-    true    => "btde::bootstrap::${node_type_map[$facts['node_type']]}",
+  $roll_bootstrap_class = ($facts['role'] in $role_map) ? {
+    true    => "btde::bootstrap::${role_map[$facts['role']]}",
     default => 'btde::bootstrap::base',
   }
 
-  include $node_bootstrap_class
+  include $roll_bootstrap_class
 
   Service['puppet']
-  -> Class[$node_bootstrap_class]
+  -> Class[$roll_bootstrap_class]
 }

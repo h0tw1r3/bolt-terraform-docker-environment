@@ -10,7 +10,6 @@ AllCops:
   Exclude:
   - bin/*
   - ".vendor/**/*"
-  - ".modules/**/*"
   - "**/Gemfile"
   - "**/Rakefile"
   - pkg/**/*
@@ -19,6 +18,7 @@ AllCops:
   - "**/Puppetfile"
   - "**/Vagrantfile"
   - "**/Guardfile"
+  - ".modules/**/*"
 Layout/LineLength:
   Description: People have wide screens, use them.
   Max: 200
@@ -72,7 +72,6 @@ Style/TrailingCommaInArrayLiteral:
 Style/SymbolArray:
   Description: Using percent style obscures symbolic intent of array's contents.
   EnforcedStyle: brackets
-inherit_from: ".rubocop_todo.yml"
 RSpec/MessageSpies:
   EnforcedStyle: receive
 Style/Documentation:

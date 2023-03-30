@@ -1,0 +1,75 @@
+ARG IMAGE_REPO
+ARG IMAGE_TAG
+
+FROM $IMAGE_REPO:$IMAGE_TAG as base
+
+ENV container docker
+ENV DEBIAN_FRONTEND noninteractive
+
+USER root
+WORKDIR /root
+
+RUN set -x
+RUN echo 'root:root' | chpasswd
+
+ADD support/init-fake.conf /etc/init/fake-container-events.conf
+
+RUN rm /usr/sbin/policy-rc.d; \
+    rm /sbin/initctl; dpkg-divert --rename --remove /sbin/initctl
+
+RUN apt-get update -y \
+    && apt-get install --no-install-recommends -y \
+       util-linux \
+       locales \
+       apt-transport-https \
+       software-properties-common iptables iptables-persistent \
+       iproute2 lsb-release wget ca-certificates vim-tiny iputils-ping \
+       openssh-server openssh-client \
+    && apt-get clean \
+    && rm -rf /var/run/nologin
+
+RUN locale-gen en_US.UTF-8 && update-locale LANG=en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
+
+RUN /usr/sbin/update-rc.d -f ondemand remove; \
+    for f in \
+        /etc/init/u*.conf \
+        /etc/init/mounted-dev.conf \
+        /etc/init/mounted-proc.conf \
+        /etc/init/mounted-run.conf \
+        /etc/init/mounted-tmp.conf \
+        /etc/init/mounted-var.conf \
+        /etc/init/hostname.conf \
+        /etc/init/networking.conf \
+        /etc/init/tty*.conf \
+        /etc/init/plymouth*.conf \
+        /etc/init/hwclock*.conf \
+        /etc/init/module*.conf\
+    ; do \
+    dpkg-divert --local --rename --add "$f"; \
+    done; \
+    echo '# /lib/init/fstab: cleared out for bare-bones Docker' > /lib/init/fstab
+
+RUN sed -ri \
+    -e "s/^#?PermitRootLogin .*/PermitRootLogin yes/" \
+    -e "s/^#?PasswordAuthentication .*/PasswordAuthentication yes/" \
+    -e "s/^#?UseDNS .*/UseDNS no/" /etc/ssh/sshd_config \
+    /etc/ssh/sshd_config \
+    && /usr/sbin/update-rc.d ssh defaults
+
+VOLUME [ "/sys/fs/cgroup", "/tmp", "/run", "/run/lock" ]
+
+STOPSIGNAL SIGRTMIN+3
+
+CMD [ "/sbin/init" ]
+
+FROM base as ubuntu-14.04
+
+RUN wget https://apt.puppetlabs.com/puppet5-release-trusty.deb \
+    && dpkg -i puppet5-release-trusty.deb && rm puppet5-release-trusty.deb \
+    && apt-get update -y \
+    && apt-get install -y puppet-agent \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

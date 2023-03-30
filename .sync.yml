@@ -12,7 +12,20 @@ Rakefile:
     - '140chars'
 .rubocop.yml:
   default_configs:
-    inherit_from: ".rubocop_todo.yml"
+    AllCops:
+      Exclude:
+        - ".modules/**/*"
+.gitlab-ci.yml:
+  custom:
+    custom_jobs:
+      shellcheck:
+        stage: unit
+        image: kpalaman/shellcheck-alpine:latest
+        before_script:
+          - apk update
+          - apk add git
+        script:
+          - git ls-files --exclude='*.sh' --ignored -c -z | xargs -0r shellcheck
 .gitignore:
   paths:
     - .modules/

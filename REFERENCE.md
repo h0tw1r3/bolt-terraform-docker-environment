@@ -12,7 +12,7 @@
 
 #### Private Classes
 
-* `btde::bootstrap::base`: bootstrap any node type
+* `btde::bootstrap::base`: bootstrap any role
 * `btde::bootstrap::primary`: bootstrap primary puppet server
 
 ### Functions
@@ -20,7 +20,9 @@
 * [`btde::abspath`](#btde--abspath): Converts the path name of a file to an absolute path name.
 * [`btde::getgroup`](#btde--getgroup): Returns the group information for the specified group id or name
 * [`btde::getuser`](#btde--getuser): Returns the passwd information for the user with specified login id or name
+* [`btde::hash_passwd`](#btde--hash_passwd): Generates a SHA512 passwd (shadow) suitable hash using a fqdn_rand salt
 * [`btde::to_json`](#btde--to_json): Convert Array or Hash to JSON
+* [`deep_merge`](#deep_merge): Recursively merges two or more hashes together and returns the resulting hash.
 
 ### Plans
 
@@ -40,7 +42,7 @@ The following parameters are available in the `btde::bootstrap` class:
 
 * [`custom_facts`](#-btde--bootstrap--custom_facts)
 * [`packages`](#-btde--bootstrap--packages)
-* [`node_type_map`](#-btde--bootstrap--node_type_map)
+* [`role_map`](#-btde--bootstrap--role_map)
 
 ##### <a name="-btde--bootstrap--custom_facts"></a>`custom_facts`
 
@@ -58,7 +60,7 @@ See hiera data/common.yaml
 
 Default value: `[]`
 
-##### <a name="-btde--bootstrap--node_type_map"></a>`node_type_map`
+##### <a name="-btde--bootstrap--role_map"></a>`role_map`
 
 Data type: `Hash`
 
@@ -174,6 +176,40 @@ Data type: `Variant[String,Integer]`
 
 User login id or name
 
+### <a name="btde--hash_passwd"></a>`btde::hash_passwd`
+
+Type: Ruby 4.x API
+
+Generates a SHA512 passwd (shadow) suitable hash using a fqdn_rand salt
+
+#### Examples
+
+##### 
+
+```puppet
+$hash = btde::hash_passwd('super secure stuff here')
+```
+
+#### `btde::hash_passwd(Variant[Sensitive,String] $password)`
+
+The btde::hash_passwd function.
+
+Returns: `String` SHA-512 passwd hash
+
+##### Examples
+
+###### 
+
+```puppet
+$hash = btde::hash_passwd('super secure stuff here')
+```
+
+##### `password`
+
+Data type: `Variant[Sensitive,String]`
+
+Value to generate a passwd hash for
+
 ### <a name="btde--to_json"></a>`btde::to_json`
 
 Type: Ruby 4.x API
@@ -209,6 +245,54 @@ $json = btde::to_json($test)
 Data type: `Variant[Hash,Array]`
 
 value to convert to JSON
+
+### <a name="deep_merge"></a>`deep_merge`
+
+Type: Ruby 3.x API
+
+Recursively merges two or more hashes together and returns the resulting hash.
+
+#### Examples
+
+##### Example usage
+
+```puppet
+
+$hash1 = {'one' => 1, 'two' => 2, 'three' => { 'four' => 4 } }
+$hash2 = {'two' => 'dos', 'three' => { 'five' => 5 } }
+$merged_hash = deep_merge($hash1, $hash2)
+
+The resulting hash is equivalent to:
+
+$merged_hash = { 'one' => 1, 'two' => 'dos', 'three' => { 'four' => 4, 'five' => 5 } }
+
+When there is a duplicate key that is a hash, they are recursively merged.
+When there is a duplicate key that is not a hash, the key in the rightmost hash will "win."
+```
+
+#### `deep_merge()`
+
+The deep_merge function.
+
+Returns: `Hash` The merged h
+
+##### Examples
+
+###### Example usage
+
+```puppet
+
+$hash1 = {'one' => 1, 'two' => 2, 'three' => { 'four' => 4 } }
+$hash2 = {'two' => 'dos', 'three' => { 'five' => 5 } }
+$merged_hash = deep_merge($hash1, $hash2)
+
+The resulting hash is equivalent to:
+
+$merged_hash = { 'one' => 1, 'two' => 'dos', 'three' => { 'four' => 4, 'five' => 5 } }
+
+When there is a duplicate key that is a hash, they are recursively merged.
+When there is a duplicate key that is not a hash, the key in the rightmost hash will "win."
+```
 
 ## Plans
 
@@ -251,6 +335,20 @@ Default value: `true`
 ### <a name="btde--local--ssh_config"></a>`btde::local::ssh_config`
 
 manage local ssh_config for docker instances in ~/.ssh/btde_config
+
+#### Parameters
+
+The following parameters are available in the `btde::local::ssh_config` plan:
+
+* [`noop`](#-btde--local--ssh_config--noop)
+
+##### <a name="-btde--local--ssh_config--noop"></a>`noop`
+
+Data type: `Boolean`
+
+no changes, only report what would change
+
+Default value: `false`
 
 ### <a name="btde--terraform"></a>`btde::terraform`
 

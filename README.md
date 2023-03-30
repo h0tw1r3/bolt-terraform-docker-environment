@@ -4,7 +4,7 @@
 full system containers for local development and testing.
 
 This document is geared towards deploying a Puppet server and agents,
-but anything's possible. Most configuration is done in [docker.yaml].
+but anything's possible. Most configuration is done in [containers.yaml].
 
 ## Requirements
 
@@ -13,7 +13,7 @@ but anything's possible. Most configuration is done in [docker.yaml].
 1. Working _local_ docker, recent version. _Tested with 20.10.17_.
 1. Ensure the `control-repo` git repository is checked out and in the parent
    folder to this bolt project.
-   Alternatively, modify the appropriate volume in [docker.yaml].
+   Alternatively, modify the appropriate volume in [containers.yaml].
 
 ## Usage
 
@@ -21,7 +21,7 @@ but anything's possible. Most configuration is done in [docker.yaml].
 
 #### Configuration
 
-* Docker containers are defined in [docker.yaml].
+* Docker containers are defined in [containers.yaml].
 * Terraform variables are set in [inventory.yaml] under `vars.terraform`.
 
 #### Create
@@ -73,7 +73,7 @@ puppet agent -t
 
 [btde::bootstrap]: manifests/bootstrap.pp
 [inventory.yaml]: inventory.yaml
-[docker.yaml]: docker.yaml
+[containers.yaml]: containers.yaml
 [ssh_config]: plans/local/ssh_config.pp
 [Docker]: https://docker.com
 [Terraform]: https://terraform.io

@@ -23,7 +23,7 @@ RUN apt-get update -y \
        iproute2 lsb-release wget ca-certificates vim-tiny iputils-ping \
        openssh-server openssh-client \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/run/nologin
+    && rm -f /var/run/nologin
 
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
@@ -58,7 +58,7 @@ CMD [ "/lib/systemd/systemd", "--log-target=journal", "--log-level=info" ]
 FROM base as ubuntu-20.04
 
 RUN wget https://apt.puppetlabs.com/puppet5-release-buster.deb \
-    && dpkg -i puppet5-release-buster.deb \
+    && dpkg -i puppet5-release-buster.deb && rm puppet5-release-buster.deb \
     && apt-get update -y \
     && apt-get install -y puppet-agent \
     && apt-get clean \
@@ -67,7 +67,7 @@ RUN wget https://apt.puppetlabs.com/puppet5-release-buster.deb \
 FROM base as ubuntu-18.04
 
 RUN wget https://apt.puppetlabs.com/puppet5-release-bionic.deb \
-    && dpkg -i puppet5-release-bionic.deb \
+    && dpkg -i puppet5-release-bionic.deb && rm puppet5-release-bionic.deb \
     && apt-get update -y \
     && apt-get install -y puppet-agent \
     && apt-get clean \
@@ -76,7 +76,7 @@ RUN wget https://apt.puppetlabs.com/puppet5-release-bionic.deb \
 FROM base as ubuntu-16.04
 
 RUN wget https://apt.puppetlabs.com/puppet5-release-xenial.deb \
-    && dpkg -i puppet5-release-xenial.deb \
+    && dpkg -i puppet5-release-xenial.deb && rm puppet5-release-xenial.deb \
     && apt-get update -y \
     && apt-get install -y puppet-agent \
     && apt-get clean \

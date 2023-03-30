@@ -6,7 +6,7 @@ lookup_options:
 # make these facts available on the node when not using bolt
 # see: /etc/facter/facts.d
 btde::bootstrap::custom_facts:
-  - node_type
+  - role
   - ec2_metadata
 
 btde::bootstrap::packages:
@@ -19,5 +19,5 @@ btde::bootstrap::base::password: 'root'
 btde::bootstrap::base::groups:
   - sudo
 
-btde::bootstrap::node_type_map:
+btde::bootstrap::role_map:
   puppet_master: primary

@@ -1,6 +1,6 @@
-# @summary bootstrap any node type
+# @summary bootstrap any role
 #
-# @params password
+# @param password
 #   generated user password
 # @param groups
 #   ensure generated user is member of groups
@@ -33,5 +33,9 @@ class btde::bootstrap::base (
     user   => $user['name'],
     key    => $ssh_key[1],
     type   => $ssh_key[0],
+  }
+
+  file { '/etc/profile.d/btde-shell_prompt.sh':
+    content => file("${module_name}/shell_prompt.sh"),
   }
 }
