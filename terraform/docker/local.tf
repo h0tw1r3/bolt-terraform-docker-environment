@@ -33,6 +33,10 @@ locals {
     }
   }
 
+  need_images = distinct(flatten([
+    for name, config in local.docker_containers: [ (config.image) ]
+  ]))
+
   cgroup_parent = var.cgroup_parent != "" ? var.cgroup_parent : try(jsondecode(file("/etc/docker/daemon.json"))["cgroup-parent"], "")
 
   cgroup_volume = local.cgroup_parent != "" ? {

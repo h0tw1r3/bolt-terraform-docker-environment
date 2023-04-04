@@ -1,7 +1,7 @@
 resource "docker_image" "map" {
   for_each = {
-    for key, value in local.docker_containers:
-    value.image => lookup(local.images, value.image)
+    for image in local.need_images:
+    image => lookup(local.images, image)
   }
 
   name = each.value.name
