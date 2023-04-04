@@ -6,7 +6,7 @@ resource "docker_container" "map" {
 
   cgroupns_mode = try(each.value.cgroupns, try(local.os[each.value.image].cgroupns, var.cgroupns))
   name = each.key
-  image = docker_image.map[each.value.image].name
+  image = docker_image.map[each.value.image].image_id
   hostname = each.key
   # domainname = "${var.domain}"
 
