@@ -3,21 +3,26 @@ lookup_options:
   ^btde::.*password:
     convert_to: Sensitive
 
-# make these facts available on the node when not using bolt
-# see: /etc/facter/facts.d
+btde::bootstrap::classes:
+  - os
+  - access
+  - role
+
+# custom facts from bolt inventory facts
+# creates json file in /etc/facter/facts.d of containers
 btde::bootstrap::custom_facts:
   - role
   - ec2_metadata
 
-btde::bootstrap::packages:
+btde::bootstrap::os::packages:
   - gnupg
   - curl
   - git
   - sudo
 
-btde::bootstrap::base::password: 'root'
-btde::bootstrap::base::groups:
+btde::bootstrap::access::password: 'root'
+btde::bootstrap::access::groups:
   - sudo
 
-btde::bootstrap::role_map:
+btde::bootstrap::role::map:
   puppet_master: primary

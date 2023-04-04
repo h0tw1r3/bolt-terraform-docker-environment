@@ -46,6 +46,8 @@ Relative to the [terraform/docker] folder:
          repo = "centos"
          tag = "stream9"
        }
+4. Add an os bootstrap class for the os family if it doesn't exist.
+   See the [bootstrap/os/debian] class for an example.
 
 ### Infrastructure
 
@@ -108,3 +110,4 @@ puppet agent -t
 [local.tf]: terraform/docker/local.tf
 [terraform/docker]: terraform/docker
 [images]: terraform/docker/images
+[bootstrap/os/debian]: manifests/bootstrap/os/debian.pp

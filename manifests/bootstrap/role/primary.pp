@@ -1,8 +1,8 @@
 # @summary bootstrap primary puppet server
 #
 # @api private
-class btde::bootstrap::primary {
+class btde::bootstrap::role::primary {
   assert_private()
 
-  require btde::bootstrap::base
+  contain btde::bootstrap::role::common
 }

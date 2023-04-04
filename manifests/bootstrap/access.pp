@@ -1,4 +1,4 @@
-# @summary bootstrap any role
+# @summary bootstrap ssh access to container
 #
 # @param password
 #   generated user password
@@ -6,7 +6,7 @@
 #   ensure generated user is member of groups
 #
 # @api private
-class btde::bootstrap::base (
+class btde::bootstrap::access (
   Sensitive $password,
   Optional[Array] $groups,
 ) {
@@ -33,9 +33,5 @@ class btde::bootstrap::base (
     user   => $user['name'],
     key    => $ssh_key[1],
     type   => $ssh_key[0],
-  }
-
-  file { '/etc/profile.d/btde-shell_prompt.sh':
-    content => file("${module_name}/shell_prompt.sh"),
   }
 }
