@@ -6,8 +6,8 @@ resource "docker_image" "map" {
 
   name = each.value.name
   build {
-    context = "."
-    dockerfile = try(each.value.dockerfile, "Dockerfile")
+    context = try(dirname(each.value.dockerfile), ".")
+    dockerfile = try(basename(each.value.dockerfile), "Dockerfile")
     build_args = {
       IMAGE_REPO : each.value.repo
       IMAGE_TAG : each.value.tag

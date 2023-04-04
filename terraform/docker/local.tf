@@ -9,25 +9,25 @@ locals {
   images = {
     "ubuntu-20.04" = {
       name = "btde.local/ubuntu:20.04"
-      dockerfile = "Dockerfile"
+      dockerfile = "images/ubuntu/Dockerfile"
       repo = "library/ubuntu"
       tag = "20.04"
     }
     "ubuntu-18.04" = {
       name = "btde.local/ubuntu:18.04"
-      dockerfile = "Dockerfile"
+      dockerfile = "images/ubuntu/Dockerfile"
       repo = "library/ubuntu"
       tag = "18.04"
     }
     "ubuntu-16.10" = {
       name = "btde.local/ubuntu:16.10"
-      dockerfile = "Dockerfile"
+      dockerfile = "images/ubuntu/Dockerfile"
       repo = "library/ubuntu"
       tag = "16.10"
     }
     "ubuntu-14.04" = {
       name = "btde.local/ubuntu:14.04"
-      dockerfile = "Dockerfile.upstart"
+      dockerfile = "images/ubuntu/Dockerfile.upstart"
       repo = "library/ubuntu"
       tag = "14.04"
     }

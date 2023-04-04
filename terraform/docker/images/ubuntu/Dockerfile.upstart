@@ -12,7 +12,7 @@ WORKDIR /root
 RUN set -x
 RUN echo 'root:root' | chpasswd
 
-ADD support/init-fake.conf /etc/init/fake-container-events.conf
+ADD init-fake.conf /etc/init/fake-container-events.conf
 
 RUN rm /usr/sbin/policy-rc.d; \
     rm /sbin/initctl; dpkg-divert --rename --remove /sbin/initctl
