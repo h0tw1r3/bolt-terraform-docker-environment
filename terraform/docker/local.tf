@@ -47,5 +47,4 @@ locals {
   } : { }
 
   docker_containers = yamldecode(file("${path.root}/../../containers.yaml"))
-  docker_daemon = jsondecode(file("/etc/docker/daemon.json"))
 }
