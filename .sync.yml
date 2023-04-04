@@ -35,8 +35,7 @@ Rakefile:
     - .plugin_cache.json
     - .task_cache.json
     - .rerun.json
-    - .terraform/
-    - .terraform*lock.hcl
+    - .terraform*
     - terraform.tfstate*
     - Puppetfile
     - /keys/ssh.*
