@@ -3,26 +3,51 @@
 [Puppet Bolt] project using [Terraform] and [Docker] to create and manage
 full system containers for local development and testing.
 
-This document is geared towards deploying a Puppet server and agents,
-but anything's possible. Most configuration is done in [containers.yaml].
+This project is geared towards deploying a Puppet server and agents,
+but anything's possible.
 
 ## Requirements
 
-1. Only tested on Linux. Patches to support other OS's welcome.
-1. Recent version of Puppet Bolt. _Tested with 3.26.2._
-1. Working _local_ docker, recent version. _Tested with 20.10.17_.
-1. Ensure the `control-repo` git repository is checked out and in the parent
-   folder to this bolt project.
-   Alternatively, modify the appropriate volume in [containers.yaml].
+1. Only tested on Linux.
+   _Welcome contributions to support other OS's!_
+1. Recent version of [Puppet Bolt].
+   _Tested with 3.26.2._
+1. Working _local_ docker, recent version, usable by your unprivileged user.
+   _Tested with 20.10.17_.
 
 ## Usage
 
-### Infrastructure
-
-#### Configuration
+### Configuration
 
 * Docker containers are defined in [containers.yaml].
-* Terraform variables are set in [inventory.yaml] under `vars.terraform`.
+  See [local.tf] for a list of supported images.
+  _Currently only Ubuntu, see [OS Support]._
+* Terraform variables may be set in [inventory.yaml] under `vars.terraform`.
+  See [variables.tf] for possible variables and default values.
+
+### OS Support
+
+Currently, only Ubuntu LTS 14.04 through 20.04 are supported. Additional
+images will be added as I need them, or through contributions.
+
+Adding support is relatively straightforward if you're familiar with
+Dockerfiles.
+
+Relative to the [terraform/docker] folder:
+
+1. Create a folder under [images] for the OS name or family.
+   Example: _centos_
+2. Create a `Dockerfile` in the OS folder.
+3. Add the image to the `images` map in [local.tf]. Example:
+
+       "centos-9" = {
+         name = "btde.local/centos:stream9"
+         dockerfile = "images/centos/Dockerfile"
+         repo = "centos"
+         tag = "stream9"
+       }
+
+### Infrastructure
 
 #### Create
 
@@ -47,9 +72,10 @@ bolt inventory show
 
 #### Connect
 
-The [btde::bootstrap] plan automatically configures your local ssh client for
-easy ssh access to the test infrastructure. See `~/.ssh/btde_config` and
-the [ssh_config] plan.
+In addition to basic container setup, the [btde::bootstrap] plan configures
+your local ssh client for easy access to the container infrastructure using
+just the container name.
+See `~/.ssh/btde_config` and the [ssh_config] plan for details.
 
 ```sh
 ssh puppet-server
@@ -71,10 +97,14 @@ ssh puppet-agent
 puppet agent -t
 ```
 
-[btde::bootstrap]: manifests/bootstrap.pp
+[btde::bootstrap]: plans/bootstrap.pp
 [inventory.yaml]: inventory.yaml
 [containers.yaml]: containers.yaml
 [ssh_config]: plans/local/ssh_config.pp
 [Docker]: https://docker.com
 [Terraform]: https://terraform.io
 [Puppet Bolt]: https://puppet.com/docs/bolt/
+[variables.tf]: terraform/docker/variables.tf
+[local.tf]: terraform/docker/local.tf
+[terraform/docker]: terraform/docker
+[images]: terraform/docker/images

@@ -30,7 +30,7 @@ config:
 
 vars:
   terraform:
-    domain: q.local
+    domain: my.local
   nodes:
     _plugin: yaml
     filepath: containers.yaml
