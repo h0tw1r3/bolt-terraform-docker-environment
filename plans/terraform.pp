@@ -1,4 +1,4 @@
-# @summary manage nodes on aws with terraform
+# @summary manage infrastructure with terraform
 #
 # @param [Boolean] destroy
 #     Destroy all terraform resources
@@ -6,9 +6,13 @@
 # @param [Boolean] output
 #     Display terraform output
 #
+# @param [Enum] provider
+#     Use terraform provider
+#
 plan btde::terraform (
   Boolean $destroy = false,
   Boolean $output = false,
+  Enum['docker'] $provider = 'docker',
 ) {
   $target = get_target('localhost')
 
@@ -23,13 +27,13 @@ plan btde::terraform (
     $init_result = run_task(
       'terraform::initialize',
       'localhost',
-      dir => './terraform/docker',
+      dir => "./terraform/${provider}",
     )
   }
 
   $results = run_plan(
     $task,
-    'dir' => './terraform/docker',
+    'dir' => "./terraform/${provider}",
     'var' => $terraform_vars,
   )
   $results.each |$result| {
@@ -40,7 +44,7 @@ plan btde::terraform (
     $output_results = run_task(
       'terraform::output',
       'localhost',
-      'dir' => './terraform/docker',
+      'dir' => "./terraform/${provider}",
     )
     $output_results.each |$result| {
       out::message($result.value)

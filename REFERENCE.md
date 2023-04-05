@@ -33,7 +33,7 @@
 
 * [`btde::bootstrap`](#btde--bootstrap): bootstrap nodes
 * [`btde::local::ssh_config`](#btde--local--ssh_config): manage local ssh_config for docker instances in ~/.ssh/btde_config
-* [`btde::terraform`](#btde--terraform): manage nodes on aws with terraform
+* [`btde::terraform`](#btde--terraform): manage infrastructure with terraform
 
 ## Classes
 
@@ -348,7 +348,7 @@ Default value: `false`
 
 ### <a name="btde--terraform"></a>`btde::terraform`
 
-manage nodes on aws with terraform
+manage infrastructure with terraform
 
 #### Parameters
 
@@ -356,6 +356,7 @@ The following parameters are available in the `btde::terraform` plan:
 
 * [`destroy`](#-btde--terraform--destroy)
 * [`output`](#-btde--terraform--output)
+* [`provider`](#-btde--terraform--provider)
 
 ##### <a name="-btde--terraform--destroy"></a>`destroy`
 
@@ -372,4 +373,12 @@ Data type: `Boolean`
 Display terraform output
 
 Default value: `false`
+
+##### <a name="-btde--terraform--provider"></a>`provider`
+
+Data type: `Enum['docker']`
+
+Use terraform provider
+
+Default value: `'docker'`
 
