@@ -1,7 +1,7 @@
-# @summary primary puppet server role
+# @summary base role
 #
 # @api private
-class btde::bootstrap::role::primary {
+class btde::bootstrap::role::base {
   assert_private()
 
   contain btde::bootstrap::role::common

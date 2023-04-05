@@ -1,4 +1,4 @@
-# @summary common bootstrap role
+# @summary common resources for all roles
 #
 # @api private
 class btde::bootstrap::role::common {

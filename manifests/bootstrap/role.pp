@@ -9,10 +9,10 @@ class btde::bootstrap::role (
 ) {
   assert_private()
 
-  $roll_bootstrap_class = ($facts['role'] in $map) ? {
-    true    => "btde::bootstrap::role::${map[$facts['role']]}",
-    default => 'btde::bootstrap::role::common',
+  if $facts['role'] {
+    $map[$facts['role']] ? {
+      String  => "btde::bootstrap::role::${map[$facts['role']]}",
+      default => "btde::bootstrap::role::${facts['role']}",
+    }.contain
   }
-
-  contain $roll_bootstrap_class
 }

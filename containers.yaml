@@ -1,6 +1,9 @@
 ---
 puppet-server:
   image: ubuntu-20.04
+  memory: 3096
+  host_aliases:
+    - puppet
 #  volumes:
 #    /etc/puppetlabs/code/environments/production:
 #      path:  "../control-repo"

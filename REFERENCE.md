@@ -12,8 +12,13 @@
 
 #### Private Classes
 
-* `btde::bootstrap::base`: bootstrap any role
-* `btde::bootstrap::primary`: bootstrap primary puppet server
+* `btde::bootstrap::access`: bootstrap ssh access to container
+* `btde::bootstrap::os`: bootstrap os
+* `btde::bootstrap::os::debian`: bootstrap debian type os
+* `btde::bootstrap::role`: bootstrap role
+* `btde::bootstrap::role::base`: base role
+* `btde::bootstrap::role::common`: common resources for all roles
+* `btde::bootstrap::role::primary`: primary puppet server role
 
 ### Functions
 
@@ -41,8 +46,7 @@ bootstrap node
 The following parameters are available in the `btde::bootstrap` class:
 
 * [`custom_facts`](#-btde--bootstrap--custom_facts)
-* [`packages`](#-btde--bootstrap--packages)
-* [`role_map`](#-btde--bootstrap--role_map)
+* [`classes`](#-btde--bootstrap--classes)
 
 ##### <a name="-btde--bootstrap--custom_facts"></a>`custom_facts`
 
@@ -52,21 +56,13 @@ Create custom facts on the node for these fact names
 
 Default value: `[]`
 
-##### <a name="-btde--bootstrap--packages"></a>`packages`
+##### <a name="-btde--bootstrap--classes"></a>`classes`
 
 Data type: `Array`
 
-See hiera data/common.yaml
+Bootstrap classes to contain
 
 Default value: `[]`
-
-##### <a name="-btde--bootstrap--role_map"></a>`role_map`
-
-Data type: `Hash`
-
-See hiera data/common.yaml
-
-Default value: `{}`
 
 ## Functions
 
