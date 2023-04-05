@@ -9,11 +9,11 @@ puppet-server:
       source: 'README.md'
   facts:
     role: puppet_master
+  devices:
+    /dev/loop0:
+    /dev/loop1:
 puppet-agent1:
   image: ubuntu-18.04
-  facts:
-    role: base
-puppet-agent2:
-  image: ubuntu-14.04
-  facts:
-    role: base
+  devices:
+    /dev/loop2:
+      path: /dev/loop0

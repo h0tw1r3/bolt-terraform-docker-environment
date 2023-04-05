@@ -79,6 +79,15 @@ resource "docker_container" "map" {
     }
   }
 
+  dynamic "devices" {
+    for_each = try(each.value.devices, {})
+    content {
+      container_path = try(devices.value.path, devices.key)
+      host_path = devices.key
+      permissions = try(devices.value.permissions, "rwm")
+    }
+  }
+
   networks_advanced {
     name = docker_network.btde.name
     aliases = try(each.value.host_aliases, [])
